@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="..\Team7_WbApp.css">
+    <title>Robotic Deminer</title>
+</head>
+<body>
+
+    <div id="div1" class="fa"></div>
+    <div class="topnav">
+        <div id="myLinks">
+            <a href="Team7_WebApp.html">Home</a>
+            <a href="Team7_GeneralInstructions.html">Tutorials/Help</a>
+            <a href="GameControllerSetup.html">Game Controller Setup</a>
+            <a href="Team7_GameControllerLayout.html">Game Controller Layout</a>
+            <a href="Team7_gamestart.html">Game Controller Teleoperation</a>
+            <a href="Team7_TabletStart.html">Tablet Controller Teleoperation</a>
+        </div>
+        <div style = "position:fixed; right:0px; top: 0px;">
+            <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <i class="fa fa-bars"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="myDiv">
+        <h1>Please Select Control Option</h1>
+    </div>
+
+
+    <button class="button button1" onclick="document.location='GameControllerSetup.html'">Game Controller</button>
+    <button class="button button2" onclick="document.location='Team7_TabletStart.html'">Tablet Controller</button>
+
+    <script>
+        function myFunction() {
+            var x = document.getElementById("myLinks");
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+        /* Change this function to display battery*/
+        function chargebattery() {
+            var a;
+            a = document.getElementById("div1");
+            a.innerHTML = "&#xf244;";
+            setTimeout(function () {
+                a.innerHTML = "&#xf243;";
+                }, 1000);
+            setTimeout(function () {
+                a.innerHTML = "&#xf242;";
+                }, 2000);
+            setTimeout(function () {
+                a.innerHTML = "&#xf241;";
+                }, 3000);
+            setTimeout(function () {
+                a.innerHTML = "&#xf240;";
+                }, 4000);
+        }
+        chargebattery();
+        setInterval(chargebattery, 5000);
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,394 @@
+/* Tablet Start Page*/
+body {/*background-color: rgb(134, 199, 243);*/
+    background-image: url('volcanic-rock-background-pattern-stone.jpeg');} /*background-image: url('img_girl.jpg');}*/
+h1   {color: white;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;}
+h2  {color:black;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;}
+h3 {color:white;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;}
+p{
+    color: white;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: black;
+    /*z-index: -50;*/
+}
+.topnav {
+    overflow: hidden;
+    background-color: black; /* #333;*/
+    position: relative;
+    z-index: 15;
+    opacity: 0.9;
+}
+
+/* Hide the links inside the navigation menu (except for logo/home) */
+.topnav #myLinks {
+    display: none;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.topnav a {
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    /*border: 1px black solid; */
+    display: block;
+}
+
+.topnav b {
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    display: block;
+}
+
+.controller_con {
+    position: fixed;
+    border: 2px outset white;
+    background-color: gray; 
+    opacity: 0.7;
+    height: 90vh; 
+}
+#controller_con2 {
+    position: fixed;
+    margin: 0px auto;
+    width: 40vw; 
+    height: 60vh; 
+    top: 10vh;
+    left: 30vw;
+    border: 10px #333 solid;
+}
+
+#container1 {
+    margin: 0px auto;
+    width: 40%; 
+    height: 60%; 
+    border: 10px #333 solid;
+    position: absolute;
+    right: 5%; 
+    top: 10%;
+    border-radius: 5%;
+}
+#container2 {
+    margin: 0px auto;
+    width: 40%; 
+    height: 60%; 
+    border: 10px #333 solid;
+    position: absolute;
+    left: 5%; 
+    top: 10%;
+    border-radius: 5%;
+}
+#videoElement {
+    width: 100%; 
+    height: 100%; 
+    background-color: #666;
+    border-radius: 2%; /*12px;*/
+}
+
+#videoElement1 {
+    width: 100%;
+    height: 100%; 
+    background-color: #666;
+    border-radius: 2%; /*12px;*/
+}
+#ArmCd {
+    width: 30%; /*350px;*/
+    height: 20%; /*100px;*/
+    border: 10px;
+    position: absolute;
+    background-color: #666;
+    border: 5px #333 solid;
+    border-radius: 2%; /*px;*/
+    top: 73%; /*500px;*/
+    left: 5%; /*50px;*/
+    z-index: 15;
+    opacity: 0.5;
+}
+#TabletControls {
+    width: 30vmin; /*350px;*/
+    height: 30vmin; /*200px;*/
+    border: 10px;
+    position: absolute;
+    background-color: grey;
+    border: 5px black solid;
+    border-radius: 100%;
+    top: 63.5%;
+    right: 1%; /*50px;*/
+    /*z-index: 20;*/
+    opacity: 0.8;
+}
+#TabletControlsL {
+    width: 30vmin; /*350px;*/
+    height: 30vmin; /*200px;*/
+    border: 10px;
+    position: absolute;
+    background-color: grey;
+    border: 5px black solid;
+    border-radius: 100%;
+    top: 63.5%;
+    left: 1%; /*50px;*/
+    /*z-index: 20;*/
+    opacity: 0.8;
+}
+* {
+    border: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+#main {
+    align-items: center;
+    display: flex;
+    /*display: flexbox;*/
+    height: 100%;
+    justify-content: center;
+    margin: auto;
+    width: 100%;
+    z-index: 15;
+}
+
+#wrapperl {
+    border: 1px solid black;
+    /*width: 5vw; 
+    height: 10vh;*/
+    border-radius: 100%;
+    background-color: black;
+    width: 15vmin;
+    height: 15vmin;/*300px;
+    height: 300px;*/
+}
+
+#wrapper {
+    border: 1px solid black;
+    /*width: 5vw; 
+    height: 10vh;*/
+    border-radius: 100%;
+    background-color: black;
+    width: 15vmin;
+    height: 15vmin;/*300px;
+    height: 300px;*/
+}
+
+.joystick {
+    background-color: green;
+    border: 5px solid black;
+    border-radius: 100%;
+    cursor: pointer;
+    height: 100%;
+    user-select: none;
+    width: 100%;
+    justify-content: center;
+}
+#controlBox{
+    background-color: white;
+    display: inline-block;
+    border: 2px solid black;
+    border-radius: 6px;
+    position: fixed;
+    left: 30vw;
+    top: 73%;
+    height: 22%;
+    width: 40%;
+    opacity: 0.6;
+}
+.Init{
+    background-color: green; /* Green */
+    border: 2px solid black;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 100%;
+    border-radius: 12px;
+    left: 32vw;
+    top: 75vh;
+    width: 15vw;
+    position: fixed;
+  }
+  .Start{
+    background-color: green; /* Green */
+    border: 2px solid black;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 100%;
+    border-radius: 12px;
+    right: 32vw;
+    top: 75vh;
+    width: 15vw;
+    position: fixed;
+  }
+.excavate{
+  background-color: green; /* Green */
+  border: 2px solid black;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 100%;
+  border-radius: 12px;
+  left: 32vw;
+  top: 85vh;
+  width: 15vw;
+  position: fixed;
+}
+.stop_excavate{
+  background-color: green; /* Green */
+  border: 2px solid black;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 100%;
+  border-radius: 12px;
+  right: 32vw;
+  top: 85vh;
+  width: 15vw;
+  position: fixed;
+}
+
+.myDiv {
+    border: 2px outset white;
+    background-color: black;    
+    text-align: center;
+}
+.icon{
+    color: white;
+    font-size: 16px;
+}
+.button {
+    background-color: grey; /* Green, 2px */
+    border: 3px solid white;
+    color: white;
+    padding: 1% 2%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 2vw; /*16px;*/
+    border-radius: 8vw; 
+}
+.button1 {
+    position: absolute;
+    left: 23vw; 
+    top: 65vh; /*500px;*/
+}
+.button2 {
+    position: absolute;
+    /*right: 300px;*/
+    right: 23vw; 
+    top: 65vh; 
+    /*font-size: 2vw; /*16px;*/
+    /*padding: 1% 2%;*/
+}
+.buttonCL {
+    position: absolute;
+    left: 30%;
+    top:80%;
+}
+.buttonCR {
+    position: absolute;
+    right: 30%;
+    top:80%;
+}
+/* Style the navigation menu */
+
+/* Team 7 General Instructions*/
+
+.InstructionsDiv {
+    border: 2px outset white;
+    background-color: gray;    
+    text-align: center;
+}
+
+.SetupDiv { /*modify on pi*/
+    display: inline-block;
+    border: 2px outset black;
+    background-color: white;    
+    text-align: center;
+    /*justify-content: center;*/
+    border-radius: 12px;
+    height: 75vh;
+    width: 60vw;
+    left: 20vw;
+    position: fixed;
+    opacity: 0.8;
+}
+#div1 {
+    font-size:16px;
+    color: white;
+    position: fixed;
+    left: 15px;
+    top: 10px;
+}
+
+.popup {
+    position: absolute; 
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+    /* The actual popup */
+.button1 .popupbox { /*modify on pi */
+    visibility: hidden;
+    justify-content: center;
+    text-align: center;
+    height: 10vh;
+    width: 50vw;
+    background-color: red;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    /*color: black;*/
+    position: fixed; /*absolute;*/
+    z-index: 1;
+    left: 25vw;
+    top: 40vh;
+    border: 2px solid black;
+    border-radius: 2%;
+}
+
+
+.button1 .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+}
+
+    /* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+    from {opacity: 0;} 
+    to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+}
+
+
+
+
+
+

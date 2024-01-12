@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+    <link rel="stylesheet" href="..\font-awesome-4.7.0\css\font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="Team7_WbApp.css">
+    <!--<link rel="stylesheet" type="text/css" href="Team7_WbApp.css">-->
+    <title>Tablet Teleoperation</title>
+    <script src="Jquery.js"></script>
+    <script type="text/javascript" src="roslib.min.js"></script>
+    <script type="text/javascript" src="eventemitter2.min.js"></script>
+    <script>
+        function maximize() {
+            //border: 10px #333 solid;
+            $(this).css("border", "0px");
+            $(this).animate({left: "0%"});
+            $(this).animate({top: "0%"});
+            $(this).animate({height: "100%"});
+            $(this).animate({width: "100%"});
+        }
+        function minimize() {
+            $(this).css("border", "10px #333 solid");
+            $(this).css("height", "30%");
+            $(this).css("width", "30%");
+            $(this).css("top", "8%");
+        }
+        function normalize() {
+            $(this).css("border", "10px #333 solid");
+            $(this).animate({top: "10%"});
+            $(this).animate({height: "60%"});
+            $(this).animate({width: "40%"});
+            
+            //$(this).animate({left: "initial"});            
+        }
+        (function($) {
+            $.fn.clickToggle = function(func1, func2) {
+                var funcs = [func1, func2];
+                this.data('toggleclicked', 0);
+                this.dblclick(function() {
+                    var data = $(this).data();
+                    var tc = data.toggleclicked;
+                    $.proxy(funcs[tc], this)();
+                    data.toggleclicked = (tc + 1) % 2;
+                });
+                return this;
+            };
+        }(jQuery));
+                /*minimize and maximize */
+        $(document).ready(function(){
+            console.log(($("#container1").width()));
+            console.log($(window).width());
+            console.log(($("#container1").width())/($(window).width()));
+            console.log(($("#container2").width())/($(window).width()));            
+            $("#container2").clickToggle(function(){
+                //$("#ArmCd").animate({left: "35%"});
+                maximize.call($("#container2")); 
+                minimize.call($("#container1"));
+                $("#videoElement1").css("border-radius", "0%");
+                $("#container1").css("left", "68%");
+                $("#container2").css("z-index", "-1");
+                $("#container1").css("z-index", "1");//($("#container2"));
+                
+            }, 
+            function(){
+            console.log($("#container2").css("width"));
+            //var min = $("#container2").css("height", "30%");
+            //console.log(min);
+            if (($("#container2").width())/($(window).width()) < 0.4){    
+                console.log("if");
+                maximize.call($("#container2")); 
+                minimize.call($("#container1"));
+                $("#videoElement1").css("border-radius", "0%");
+                $("#container1").css("left", "68%");
+                $("#container2").css("z-index", "-1");
+                $("#container1").css("z-index", "1");//($("#container2"));    }  
+            }
+            else {
+                console.log("else");
+                normalize.call($("#container2"));
+                normalize.call($("#container1"));
+                $("#videoElement").css("border-radius", "2%");
+                $("#videoElement1").css("border-radius", "2%");
+                //$("#ArmCd").animate({left: "5%"});
+                $("#container2").css("left", "5%");
+                $("#container1").css("position", "fixed");
+                $("#container1").css("left", "52.75%"); 
+                $("#container2").css("z-index", "0");
+                $("#container1").css("z-index", "0");  
+            }
+            });
+    
+            $("#container1").clickToggle(function(){
+                //$("#ArmCd").animate({left: "35%"});
+                maximize.call($("#container1")); 
+                minimize.call($("#container2"));
+                $("#videoElement").css("border-radius", "0%");
+                $("#container2").css("left", "68%");
+                $("#container1").css("z-index", "-1");
+                $("#container2").css("z-index", "1");
+            }, 
+            function(){
+                if (($("#container1").width())/($(window).width()) < 0.4){
+                    //$("#ArmCd").animate({left: "35%"});
+                    maximize.call($("#container1")); 
+                    minimize.call($("#container2"));
+                    $("#videoElement").css("border-radius", "0%");
+                    $("#container2").css("left", "68%");
+                    $("#container1").css("z-index", "-1");
+                    $("#container2").css("z-index", "1");
+                }
+                else {
+                    normalize.call($("#container2"));
+                    normalize.call($("#container1"));
+                    $("#videoElement").css("border-radius", "2%");
+                    $("#videoElement1").css("border-radius", "2%");
+                    //$("#ArmCd").animate({left: "5%"});
+                    $("#container2").css("left", "5%");
+                    $("#container1").css("position", "fixed");
+                    $("#container1").css("left", "52.75%");
+                    $("#container2").css("z-index", "0");
+                    $("#container1").css("z-index", "0");
+                }
+            });
+    
+        });
+    </script>
+
+</head>
+<body>
+    <div class ="ul">
+        <h1>Tablet Teleoperation</h1>
+        <div id="div1" class="fa"></div>
+        <div class="topnav">
+            <div id="myLinks">
+                <a href="index.html">Home</a>
+                <a href="Team7_GeneralInstructions.html">Tutorials/Help</a>
+                <a href="GameControllerSetup.html">Game Controller Setup</a>
+                <a href="Team7_GameControllerLayout.html">Game Controller Layout</a>
+                <a href="Team7_gamestart.html">Game Controller Teleoperation (RASSOR)</a>
+                <a href="Team7_gamestartscoop.html">Game Controller Teleoperation (Scoop)</a>
+                <a href="Team7_TabletStart.html">Tablet Controller Teleoperation (RASSOR)</a>
+                <a href="Team7_TabletStartscoop.html">Tablet Controller Teleoperation (Scoop)</a>
+            </div>
+            <div style = "position:fixed; right:0px; top: 0px;">
+                <b href="javascript:void(0);" class="icon" onclick="myFunction()">
+                <i class="fa fa-bars"></i>
+                </b>
+            </div>
+        </div>
+    </div>
+
+    <div id="container1">
+        <!--<video autoplay="true" id="videoElement">
+        
+	</video>-->
+    </div>
+
+    <div id="container2">
+        <!--video autoplay="true" id="videoElement1">
+        
+	</video>-->
+    </div>
+
+    <div id="controlBox">
+        <button class="Init" onclick="init()">Init</button>
+        <button class="Start" onclick="start_pose()">Start</button>
+        <button class="excavate" onclick="excavate()">Dig</button>
+        <button class="stop_excavate" onclick="stopeexcavate()">Unload Soil</button>
+    </div>
+
+    <div id="TabletControlsL">
+        <div id="main">
+          <div id="wrapperl">
+          </div>
+        </div>
+    </div>
+
+    <div id="TabletControls">
+        <div id="main">
+          <div id="wrapper">
+          </div>
+        </div>
+    </div>
+    
+
+    <script>
+        var ros = new ROSLIB.Ros({
+            url : 'ws://192.168.7.1:9090'
+        });
+        ros.on('connection', function() {
+            console.log('Connected to websocket server.');
+        });
+
+        ros.on('error', function(error) {
+            console.log('Error connecting to websocket server: ', error);
+        });
+
+        ros.on('close', function() {
+            console.log('Connection to websocket server closed.');
+        });
+        
+        /*var raspi_battery_listener = new ROSLIB.Topic({
+            ros : ros,
+            name : '/raspi_battery_level',
+            messageType : 'battery_level_msg/battery_level'
+        });
+
+        var ltc2943_battery_listener = new ROSLIB.Topic({
+            ros : ros,
+            name : '/ltc2943_battery_level',
+            messageType : 'battery_level_msg/battery_level'
+        });*/
+
+        var openManipulatorMoveClient = new ROSLIB.Service({
+                ros : ros,
+                name : '/goal_task_space_path_from_present_position_only',
+                serviceType : 'open_manipulator_msgs/SetKinematicsPose'
+        });
+
+        var openManipulatorSetJointClient = new ROSLIB.Service({
+                ros : ros,
+                //name : '/set_joint_position',
+                name : '/goal_joint_space_path',
+                serviceType : 'open_manipulator_msgs/SetJointPosition'
+        });        
+
+        var openManipulatorScoopClient = new ROSLIB.Service({
+            ros : ros,
+            name : '/goal_joint_space_path_from_present',
+            serviceType : 'open_manipulator_msgs/SetJointPosition'
+        });
+
+        function init(){
+	        clearTimeout(mA);	
+            //alert("Initialize Robot Arm");
+            var request = new ROSLIB.ServiceRequest({
+                    /*planning_group : "gripper",
+                    joint_angle : {
+                                joint1 : 0.0,
+                                joint2 : 0.0,
+                                joint3 : 0.0,
+                                joint4 : 0.0
+                    },*/
+                    joint_position : {
+                        joint_name : ['joint1','joint2','joint3','joint4'],
+                        position: [0.0, 0.0, 0.0, 0.0]
+                    },
+                    path_time : 2.0
+            });
+            openManipulatorSetJointClient.callService(request);
+            setTimeout(function(){
+                mA = setInterval(controlArm, 20);
+            }, 2000);
+        }
+        function start_pose(){
+            clearTimeout(mA);
+            //alert("Move Robot Arm to the starting pose");
+            var request = new ROSLIB.ServiceRequest({
+                    /*planning_group : "open_manipulator",
+                    joint_position : {
+                        joint_name : {
+                            position : {
+                                joint1 : 0.0,
+                                joint2 : -1.05,
+                                joint3 : 0.35,
+                                joint4 : 0.70
+                            }
+                        }
+                    },*/
+                    joint_position : {
+                        joint_name : ['joint1','joint2','joint3','joint4'],
+                        position: [0.0, -1.05, 0.35, 0.70]
+                    },
+                    path_time : 2.0
+            });
+            openManipulatorSetJointClient.callService(request);
+            setTimeout(function(){
+                mA = setInterval(controlArm, 20);
+            }, 2000);
+        }
+        function excavate(){
+            clearTimeout(mA);
+            var request = new ROSLIB.ServiceRequest({
+                    joint_position : {
+                        joint_name : ['joint1', 'joint2', 'joint3', 'joint4'],
+                        position: [0.0, 0.0, 0.0, 2.0]
+			//position : 0.9
+                    },
+                    path_time : 0.5
+            });
+		//openManipulatorJointPos.subscribe(function(message) {console.log(message.GetJointPosition);});	
+            openManipulatorScoopClient.callService(request);
+            setTimeout(function(){
+                mA = setInterval(controlArm, 20);
+            }, 2000);
+            
+        }
+        function stopeexcavate(){
+            //alert("Unload Soil");
+	    clearTimeout(mA);
+            var request = new ROSLIB.ServiceRequest({
+                    joint_position : {
+                        joint_name : ['joint1', 'joint2', 'joint3', 'joint4'],
+                        position: [0.0, 0.0, 0.0, -2.0]
+                    },
+                    path_time : 0.5
+            });
+            openManipulatorScoopClient.callService(request);
+	    setTimeout(function(){
+		mA = setInterval(controlArm, 20);
+	    }, 2000);
+        }
+
+        function myFunction() {
+            var x = document.getElementById("myLinks");
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+
+
+        /* Change this function to display battery*/
+        /*function batterylevelPB(charge_level) {
+            var a;
+            a = document.getElementById("div1");
+            //a.innerHTML = "&#xf244;";
+            if (charge_level > 0.75){
+                a.innerHTML = "Power Bank: " + charge_level*100 + "% &#xf240; ";
+                //a.style.fontFamily = "Arial";
+            }
+            else if (charge_level > 0.5){
+                a.innerHTML = "Power Bank: " + charge_level*100 + "% &#xf241; ";
+            }
+            else if (charge_level > 0.25) {
+                a.innerHTML = "Power Bank: " + charge_level*100 + "% &#xf242; ";
+            }
+            else if (charge_level>0.05){
+                a.innerHTML = "Power Bank: " + charge_level*100 + "% &#xf243; ";
+                a.style.color = 'red';
+                alert("Power Bank is low, please charge!");
+            }
+            else if (charge_level<=0.05){
+                a.innerHTML = "&#xf244;";
+                a.style.color = 'red';
+                alert("Power Bank requires immediate charging!");
+            }
+        }
+
+        function batterylevelLP(charge_level){
+            var a;
+            a = document.getElementById("div1");
+            if (charge_level > 0.75){
+                a.innerHTML += "LIPO Level: " + charge_level*100 + "% &#xf240;";
+            }
+            else if (charge_level > 0.5){
+                a.innerHTML += "LIPO Level: " + charge_level*100 + "% &#xf241;";
+            }
+            else if (charge_level > 0.25) {
+                a.innerHTML += "LIPO Level: " + charge_level*100 + "% &#xf242;";
+            }
+            else if (charge_level>0.05){
+                a.innerHTML += "LIPO Level: " + charge_level*100 + "% &#xf243;";
+                a.style.color += 'red';
+                alert("LIPO battery level is low!");
+            }
+            else if (charge_level<=0.05){
+                a.innerHTML += "LIPO Level: " + charge_level*100 + "&#xf244;";
+                a.style.color += 'red';
+                alert("LIPO requires immediate charging!");
+            }
+        }
+
+        raspi_battery_listener.subscribe(batterylevel(message.battery_level));
+        ltc2943_battery_listener.subscribe(batterylevel(message.battery_level));
+*/
+        const joystick = createJoystick(document.getElementById('wrapper'));
+        const joystickl = createJoystick(document.getElementById('wrapperl'));
+
+        // setInterval(() => console.log(joystick.getPosition()), 16);
+
+        function createJoystick(parent) {
+            const maxDiff = 50;
+            const stick = document.createElement('div');
+            stick.classList.add('joystick');
+
+            stick.addEventListener('mousedown', handleMouseDown);
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+            stick.addEventListener('touchstart', handleMouseDown);
+            document.addEventListener('touchmove', handleMouseMove);
+            document.addEventListener('touchend', handleMouseUp);
+
+            let dragStart = null;
+            let currentPos = { x: 0, y: 0 };
+
+            function handleMouseDown(event) {
+                stick.style.transition = '0s';
+                if (event.changedTouches) {
+                dragStart = {
+                    x: event.changedTouches[0].clientX,
+                    y: event.changedTouches[0].clientY,
+                };
+                return;
+                }
+                dragStart = {
+                x: event.clientX,
+                y: event.clientY,
+                };
+
+            }
+
+            function handleMouseMove(event) {
+                if (dragStart === null) return;
+                event.preventDefault();
+                if (event.changedTouches) {
+                event.clientX = event.changedTouches[0].clientX;
+                event.clientY = event.changedTouches[0].clientY;
+                }
+                const xDiff = event.clientX - dragStart.x;
+                const yDiff = event.clientY - dragStart.y;
+                const angle = Math.atan2(yDiff, xDiff);
+                    const distance = Math.min(maxDiff, Math.hypot(xDiff, yDiff));
+                    const xNew = distance * Math.cos(angle);
+                    const yNew = distance * Math.sin(angle);
+                stick.style.transform = `translate3d(${xNew}px, ${yNew}px, 0px)`;
+                currentPos = { x: xNew/100, y: yNew/100 };
+                console.log(currentPos);
+            }
+
+            function handleMouseUp(event) {
+                if (dragStart === null) return;
+                stick.style.transition = '.2s';
+                stick.style.transform = `translate3d(0px, 0px, 0px)`;
+                dragStart = null;
+                currentPos = { x: 0, y: 0 };
+            }
+
+            parent.appendChild(stick);
+            return {
+                getPosition: () => currentPos,
+            };
+        }
+        moveArm = function (x_val, y_val, z_val) {
+				var request = new ROSLIB.ServiceRequest({
+						planning_group : "gripper",
+						kinematics_pose : {
+							pose : {
+								position : {
+									x : x_val,
+									y : y_val,
+									z : z_val
+								}
+							}
+						},
+						path_time : 0.05
+				});
+
+                openManipulatorMoveClient.callService(request);
+		}
+
+        //function for converting js values to 3D coordinates
+        function convertJS(input){
+            var change = -input*0.02;
+            return change;
+        }
+
+        /*Code for taking data from controller to control arm*/
+        function controlArm() {
+            //window.requestAnimationFrame(controlArm);
+            //var gp = navigator.getGamepads()[0];
+            var delta_x = convertJS(joystick.getPosition().y);
+            var delta_y = convertJS(joystick.getPosition().x);
+            var delta_z = convertJS(joystickl.getPosition().y);
+            moveArm(delta_x, delta_y, delta_z);
+        }
+        //window.requestAnimationFrame(controlArm);
+        var mA = setInterval(controlArm, 20);
+    </script>
+</body>
+</html> 

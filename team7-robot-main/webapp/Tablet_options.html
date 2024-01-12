@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+    <link rel="stylesheet" href="..\font-awesome-4.7.0\css\font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="Team7_WbApp.css">
+    <!--<link rel="stylesheet" type="text/css" href="Team7_WbApp.css">-->
+    <title>Tablet Teleoperation</title>
+    <script src="Jquery.js"></script>
+    <script type="text/javascript" src="./roslib.min.js"></script>
+    <script type="text/javascript" src="./eventemitter2.min.js"></script>
+</head>
+<body>
+    <div class ="ul">
+        <h1>Choose End Effector</h1>
+        <div id="div1" class="fa"></div>
+        <div class="topnav">
+            <div id="myLinks">
+                <a href="index.html">Home</a>
+                <a href="Team7_GeneralInstructions.html">Tutorials/Help</a>
+                <a href="GameControllerSetup.html">Game Controller Setup</a>
+                <a href="Team7_GameControllerLayout.html">Game Controller Layout</a>
+                <a href="Team7_gamestart.html">Game Controller Teleoperation (RASSOR)</a>
+                <a href="Team7_gamestartscoop.html">Game Controller Teleoperation (Scoop)</a>
+                <a href="Team7_TabletStart.html">Tablet Controller Teleoperation (RASSOR)</a>
+                <a href="Team7_TabletStartscoop.html">Tablet Controller Teleoperation (Scoop)</a>
+            </div>
+            <div style = "position:fixed; right:0px; top: 0px;">
+                <b href="javascript:void(0);" class="icon" onclick="myFunction()">
+                <i class="fa fa-bars"></i>
+                </b>
+            </div>
+        </div>
+    </div>
+
+    <div id="container1">
+        <img src="Rotor.PNG" alt="RASSOR end effector" height="100%" width="100%"></a>
+    </div>
+
+    <div id="container2">
+        <img src="Scoop.PNG" alt="Scoop end effector" height="100%" width="100%" ></a>
+    </div>
+    
+
+    <script>
+        var ros = new ROSLIB.Ros({
+            url : 'ws://192.168.7.1:9090'
+        });
+        ros.on('connection', function() {
+            console.log('Connected to websocket server.');
+        });
+
+        ros.on('error', function(error) {
+            console.log('Error connecting to websocket server: ', error);
+        });
+
+        ros.on('close', function() {
+            console.log('Connection to websocket server closed.');
+        });
+        
+        var raspi_battery_listener = new ROSLIB.Topic({
+            ros : ros,
+            name : '/raspi_battery_level',
+            messageType : 'battery_level_msg/battery_level'
+        });
+
+        var ltc2943_battery_listener = new ROSLIB.Topic({
+            ros : ros,
+            name : '/ltc2943_battery_level',
+            messageType : 'battery_level_msg/battery_level'
+        });
+
+        document.getElementById('container1').addEventListener('click', function (event) {
+            document.location='Team7_TabletStart.html';
+        });
+        document.getElementById('container2').addEventListener('click', function (event) {
+            document.location='Team7_TabletStartscoop.html';
+        });
+
+        function myFunction() {
+            var x = document.getElementById("myLinks");
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+        /* Change this function to display battery*/
+        function batterylevelPB(charge_level) {
+            var a;
+            a = document.getElementById("div1");
+            //a.innerHTML = "&#xf244;";
+            if (charge_level > 0.75){
+                a.innerHTML = "Power Bank: " + charge_level*100 + "% &#xf240; ";
+                //a.style.fontFamily = "Arial";
+            }
+            else if (charge_level > 0.5){
+                a.innerHTML = "Power Bank: " + charge_level*100 + "% &#xf241; ";
+            }
+            else if (charge_level > 0.25) {
+                a.innerHTML = "Power Bank: " + charge_level*100 + "% &#xf242; ";
+            }
+            else if (charge_level>0.05){
+                a.innerHTML = "Power Bank: " + charge_level*100 + "% &#xf243; ";
+                a.style.color = 'red';
+                alert("Power Bank is low, please charge!");
+            }
+            else if (charge_level<=0.05){
+                a.innerHTML = "&#xf244;";
+                a.style.color = 'red';
+                alert("Power Bank requires immediate charging!");
+            }
+        }
+
+        function batterylevelLP(charge_level){
+            var a;
+            a = document.getElementById("div1");
+            if (charge_level > 0.75){
+                a.innerHTML += "LIPO Level: " + charge_level*100 + "% &#xf240;";
+            }
+            else if (charge_level > 0.5){
+                a.innerHTML += "LIPO Level: " + charge_level*100 + "% &#xf241;";
+            }
+            else if (charge_level > 0.25) {
+                a.innerHTML += "LIPO Level: " + charge_level*100 + "% &#xf242;";
+            }
+            else if (charge_level>0.05){
+                a.innerHTML += "LIPO Level: " + charge_level*100 + "% &#xf243;";
+                a.style.color += 'red';
+                alert("LIPO battery level is low!");
+            }
+            else if (charge_level<=0.05){
+                a.innerHTML += "LIPO Level: " + charge_level*100 + "&#xf244;";
+                a.style.color += 'red';
+                alert("LIPO requires immediate charging!");
+            }
+        }
+
+        raspi_battery_listener.subscribe(batterylevel(message.battery_level));
+        ltc2943_battery_listener.subscribe(batterylevel(message.battery_level));
+
+
+    </script>
+</body>
+</html> 

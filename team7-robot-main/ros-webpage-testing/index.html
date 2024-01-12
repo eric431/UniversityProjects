@@ -1,0 +1,257 @@
+<html>
+	<head>
+		<title>Hello Team 7!</title>
+		<head>
+			<script type="text/javascript" src="./roslib.min.js"></script>
+			<script type="text/javascript" src="./eventemitter2.min.js"></script>
+			<script type="text/javascript" src="./nipplejs.js"></script>
+		</head>
+	</head>
+
+	<body>
+		<h1>Hello Team 7!</h1>
+		<p> We can access this webpage when connected to the 
+		raspberry pi via wifi</p>
+		<img src="http://192.168.7.1:8081/" alt="Camera 1" ></a>
+		<img src="http://192.168.7.1:8082/" alt="Camera 2" ></a>
+		<button type="button" id="reset_cam">Reset Cameras</button>
+		<div id="zone_joystick" style="position: relative; top: 100px"></div>
+		<div class="slidercontainer" style="position: relative; width: 400px;">
+			<input type="range" min="-4.8" max="4.8" value="0" step="0.1"  class="slider" id="rangeSlider" style="width: 100%;">
+		</div>
+		<button type="button" id="init_position">Init Position</button>
+		<button type="button" id="shovel_tool">Shovel Tool</button>
+		<button type="button" id="rotor_tool">Rotor Tool</button>
+
+
+		<script type="text/javascript">
+			var ros = new ROSLIB.Ros({
+    			url : 'ws://192.168.7.1:9090'
+			});
+			ros.on('connection', function() {
+				console.log('Connected to websocket server.');
+			});
+
+			ros.on('error', function(error) {
+				document.getElementById('connecting').style.display = 'none';
+				document.getElementById('connected').style.display = 'none';
+				document.getElementById('closed').style.display = 'none';
+				document.getElementById('error').style.display = 'inline';
+				console.log('Error connecting to websocket server: ', error);
+			});
+
+			ros.on('close', function() {
+				console.log('Connection to websocket server closed.');
+			});
+			
+			var raspi_battery_listener = new ROSLIB.Topic({
+				ros : ros,
+				name : '/raspi_battery_level',
+				messageType : 'battery_level_msg/battery_level'
+			});
+
+			raspi_battery_listener.subscribe(function(message) {
+				console.log('Received message on ' + raspi_battery_listener.name + ': ' + message.battery_level);
+			});
+
+			var ltc2943_battery_listener = new ROSLIB.Topic({
+				ros : ros,
+				name : '/ltc2943_battery_level',
+				messageType : 'battery_level_msg/battery_level'
+			});
+
+			ltc2943_battery_listener.subscribe(function(message) {
+				console.log('Received message on ' + ltc2943_battery_listener.name + ': ' + message.battery_level);
+			});
+
+			var openManipulatorMoveClient = new ROSLIB.Service({
+					ros : ros,
+					name : '/goal_task_space_path_from_present_position_only',
+					serviceType : 'open_manipulator_msgs/SetKinematicsPose'
+			});
+
+			var openManipulatorToolClient = new ROSLIB.Service({
+					ros : ros,
+					name : '/goal_tool_control',
+					serviceType : 'open_manipulator_msgs/SetJointVelocity'
+			});
+
+			var openManipulatorJointClient = new ROSLIB.Service({
+					ros : ros,
+					name : '/goal_joint_space_path',
+					serviceType : 'open_manipulator_msgs/SetJointPosition'
+			});
+
+			var slider = document.getElementById("rangeSlider");
+
+			var cmdRunnerClient = new ROSLIB.Service({
+					ros : ros,
+					name : '/cmd_runner',
+					serviceType : 'cmd_runner/CmdRun'
+			});			
+
+			document.getElementById("reset_cam").onclick = function() {resetCameras()};
+
+			function resetCameras() {
+				console.log("camera button hit");
+
+				var request = new ROSLIB.ServiceRequest({
+					command : "sudo service motion restart"
+				});	
+				
+				cmdRunnerClient.callService(request, function(result) {
+					console.log('Result for service call on '
+					+ cmdRunnerClient.name
+					+ ': '
+					+ result.success);
+				});	
+			}
+
+			moveArm = function (x_val, y_val) {
+				console.log("call moveArm");
+				var request = new ROSLIB.ServiceRequest({
+						planning_group : "gripper",
+						kinematics_pose : {
+							pose : {
+								position : {
+									x : x_val,
+									y : y_val,
+									z : 0.0
+								}
+							}
+						},
+						path_time : 0.5
+				});
+				
+				openManipulatorMoveClient.callService(request, function(result) {
+					console.log('Result for service call on '
+					+ openManipulatorMoveClient.name
+					+ ': '
+					+ result.is_planned);
+				});
+			}
+
+			createJoystick = function () {
+				var options = {
+					zone: document.getElementById('zone_joystick'),
+					threshold: 0.1,
+					position: { left: 50 + '%' },
+					mode: 'static',
+					size: 150,
+					color: '#000000',
+				};
+				manager = nipplejs.create(options);
+
+				x_val = 0;
+				y_val = 0;
+
+				self.manager.on('start', function (event, nipple) {
+					console.log("Movement start");
+					timer = setInterval(function () {
+						moveArm(x_val, y_val);
+					}, 150);
+				});
+
+				self.manager.on('move', function (event, nipple) {
+					console.log("Moving");
+					max_x = 0.01;
+					max_y = 0.01;
+					max_distance = 75.0; //pixels
+					x_val = Math.sin(nipple.angle.radian) * max_x * nipple.distance/max_distance;
+					y_val = -Math.cos(nipple.angle.radian) * max_y * nipple.distance/max_distance;
+					console.log(x_val);
+				});	
+
+				
+
+				self.manager.on('end', function () {
+					console.log("Movement end");
+					if (timer) {
+						clearInterval(timer);
+					}
+				});
+			}
+
+			window.onload = function () {
+				createJoystick();
+			}
+
+			slider.oninput = function() {
+				console.log("move slider" + this.value);
+				sliderVal = parseFloat(this.value);
+
+				var request = new ROSLIB.ServiceRequest({
+					joint_velocity : {
+						joint_name : ['gripper'],
+						velocity : [sliderVal]
+					}
+				});
+
+				openManipulatorToolClient.callService(request, function(result) {
+					console.log('Result for service call on '
+					+ openManipulatorToolClient.name
+					+ ': '
+					+ result.is_planned);
+				});
+			}
+
+			document.getElementById("init_position").onclick = function() {initPos()};
+
+			function initPos() {
+				console.log("init position hit");
+				var request = new ROSLIB.ServiceRequest({
+						joint_position : {
+							joint_name : ['joint1','joint2','joint3','joint4'],
+							position: [0.0, 0.0, 0.0, 0.0]
+						},
+						path_time : 1
+				});
+
+				openManipulatorJointClient.callService(request, function(result) {
+					console.log('Result for service call on '
+					+ openManipulatorJointClient.name
+					+ ': '
+					+ result.is_planned);
+				});
+			}
+
+			document.getElementById("shovel_tool").onclick = function() {shovelTool()};
+
+			function shovelTool() {
+				console.log("shovel tool button hit");
+
+				var request = new ROSLIB.ServiceRequest({
+					command : "bash /home/ubuntu/team7-robot/scripts/notool"
+				});	
+				
+				cmdRunnerClient.callService(request, function(result) {
+					console.log('Result for service call on '
+					+ cmdRunnerClient.name
+					+ ': '
+					+ result.success);
+				});	
+			}
+
+			document.getElementById("rotor_tool").onclick = function() {rotorTool()};
+
+			function rotorTool() {
+				console.log("rotor tool button hit");
+
+				var request = new ROSLIB.ServiceRequest({
+					command : "bash /home/ubuntu/team7-robot/scripts/rotortool"
+				});	
+				
+				cmdRunnerClient.callService(request, function(result) {
+					console.log('Result for service call on '
+					+ cmdRunnerClient.name
+					+ ': '
+					+ result.success);
+				});	
+			}
+
+		</script>
+
+
+	</body>
+
+</html>
